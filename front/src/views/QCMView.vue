@@ -17,9 +17,9 @@
         <form @submit.prevent="startQCM" class="config-form">
           <div class="form-group">
             <label for="category">Catégorie :</label>
-            <select 
-              id="category" 
-              v-model="config.categoryId" 
+            <select
+              id="category"
+              v-model.number="config.categoryId"
               class="form-control"
             >
               <option value="">Toutes les catégories</option>
