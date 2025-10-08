@@ -2,45 +2,35 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\PageContent;
-use App\Form\ContentBlockTypeForm;
+use App\Entity\ExoContent;
+use App\Form\ExoBlockTypeForm;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CodeEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 
-
-class PageContentCrudController extends AbstractCrudController
+class ExoContentCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return PageContent::class;
+        return ExoContent::class;
     }
-
 
     public function configureFields(string $pageName): iterable
     {
         return [
-            AssociationField::new('page'),
+            AssociationField::new('exo'),
             AssociationField::new('category'),
-            AssociationField::new('menu'),
-           
+            AssociationField::new('exoMenu'),
             TextField::new('title'),
-            
             CodeEditorField::new('code'),
-
-           CollectionField::new('pageBlocks')
-              ->setEntryType(ContentBlockTypeForm::class)
-              ->onlyOnForms()
-              ->allowAdd()
-              ->allowDelete()
+            CollectionField::new('exoBlocks')
+                ->setEntryType(ExoBlockTypeForm::class)
+                ->onlyOnForms()
+                ->allowAdd()
+                ->allowDelete()
         ];
-   
     }
-    
 }
