@@ -81,6 +81,8 @@
     },
     "scripts": {
         "analyse": "phpstan analyse --configuration=phpstan.dist.neon --no-progress",
+        "deptrac": "deptrac analyse --config-file=deptrac.yaml --no-progress",
+        "deptrac:baseline": "deptrac analyse --config-file=deptrac.yaml --formatter=baseline --output=deptrac.yaml",
         "test": "phpunit --testdox",
         "test:coverage": "phpunit --coverage-clover=var/coverage/clover.xml",
         "auto-scripts": {
@@ -106,6 +108,7 @@
     },
     "require-dev": {
         "deployer/deployer": "^7.5",
+        "deptrac/deptrac": "^3.0",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-doctrine": "^2.0",
         "phpstan/phpstan-symfony": "^2.0",

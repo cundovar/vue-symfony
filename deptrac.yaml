@@ -1,0 +1,215 @@
+# Regles d'architecture hexagonale, verifiees en CI.
+#
+# Voir docs/adr/001-architecture-hexagonale.md pour la decision d'architecture
+# et docs/roadmap-100-hexagonal.md pour le plan de migration.
+#
+# Lancer en local :  composer deptrac
+# Regenerer la baseline apres une phase :  composer deptrac:baseline
+
+deptrac:
+  paths:
+    - ./src
+
+  layers:
+    # ---- Couches applicatives ----
+
+    - name: Domain
+      collectors:
+        - { type: classLike, value: ^App\\Domain\\.* }
+
+    - name: Application
+      collectors:
+        - { type: classLike, value: ^App\\Application\\.* }
+
+    - name: Infrastructure
+      collectors:
+        - { type: classLike, value: ^App\\Infrastructure\\.* }
+
+    # Entites Doctrine partagees. Elles portent le mapping ORM : c'est le
+    # choix assume de l'ADR 001 (option 1). Toutes les couches peuvent en
+    # dependre, mais elles ne dependent de rien d'applicatif.
+    - name: Entity
+      collectors:
+        - { type: classLike, value: ^App\\Entity\\.* }
+
+    # ---- Adaptateurs d'entree ----
+
+    - name: Controller
+      collectors:
+        - { type: classLike, value: ^App\\Controller\\.* }
+
+    - name: Command
+      collectors:
+        - { type: classLike, value: ^App\\Command\\.* }
+
+    - name: EventListener
+      collectors:
+        - { type: classLike, value: ^App\\EventListener\\.* }
+
+    - name: Security
+      collectors:
+        - { type: classLike, value: ^App\\Security\\.* }
+
+    - name: Form
+      collectors:
+        - { type: classLike, value: ^App\\Form\\.* }
+
+    # Services transverses restants. Cible : disparaitre en phase 03,
+    # absorbes par des handlers Application.
+    - name: Service
+      collectors:
+        - { type: classLike, value: ^App\\Service\\.* }
+
+    - name: DoctrineConfig
+      collectors:
+        - { type: classLike, value: ^App\\Doctrine\\.* }
+
+    # ---- Dependances techniques ----
+
+    - name: DoctrineVendor
+      collectors:
+        - { type: classLike, value: ^Doctrine\\.* }
+
+    - name: SymfonyVendor
+      collectors:
+        - { type: classLike, value: ^Symfony\\.* }
+
+    - name: ApiPlatform
+      collectors:
+        - { type: classLike, value: ^ApiPlatform\\.* }
+
+  ruleset:
+    # Le coeur de la regle : le domaine ne connait que les entites.
+    # Ni Doctrine, ni Symfony, ni Application, ni Infrastructure.
+    Domain:
+      - Entity
+
+    # Les cas d'usage ne connaissent que le domaine. Aucune dependance
+    # technique, aucune connaissance de l'adaptateur qui les appelle.
+    Application:
+      - Domain
+      - Entity
+
+    # Seule couche autorisee a parler a Doctrine.
+    Infrastructure:
+      - Domain
+      - Entity
+      - DoctrineVendor
+      - SymfonyVendor
+
+    Entity:
+      - DoctrineVendor
+      - SymfonyVendor
+      - ApiPlatform
+
+    # Adaptateurs d'entree : ils appellent Application, jamais Infrastructure
+    # ni Doctrine directement.
+    #
+    # Controller -> Domain n'est PAS autorise : c'est la dette que les phases
+    # 01 a 04 resorbent. Les 19 controôleurs concernes sont dans skip_violations
+    # ci-dessous ; cette liste doit se vider, jamais grandir.
+    Controller:
+      - Application
+      - Entity
+      - Form
+      - Security
+      - Service
+      - SymfonyVendor
+
+    Command:
+      - Application
+      - Entity
+      - SymfonyVendor
+
+    EventListener:
+      - Application
+      - Entity
+      - SymfonyVendor
+      - DoctrineVendor
+
+    Security:
+      - Domain
+      - Entity
+      - SymfonyVendor
+
+    Form:
+      - Entity
+      - SymfonyVendor
+
+    Service:
+      - Domain
+      - Entity
+      - SymfonyVendor
+
+    DoctrineConfig:
+      - DoctrineVendor
+
+  # Dette architecturale existante, a resorber par les phases 01 a 04 de
+  # docs/roadmap-100-hexagonal.md. Chaque contexte migre retire ses lignes.
+  skip_violations:
+        App\Controller\PageVisitController:
+            - App\Domain\UserPageVisit\Repository\UserPageVisitRepositoryInterface
+            - App\Domain\User\Repository\UserRepositoryInterface
+        App\Controller\PropositionIAController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+            - App\Domain\Menu\Repository\MenuRepositoryInterface
+            - App\Domain\PageContent\Repository\PageContentRepositoryInterface
+            - App\Domain\Page\Repository\PageRepositoryInterface
+            - App\Domain\PropositionIA\Repository\PropositionIARepositoryInterface
+        App\Controller\RegistrationController:
+            - App\Domain\User\Repository\UserRepositoryInterface
+        App\Controller\SitemapController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+            - App\Domain\Page\Repository\PageRepositoryInterface
+        App\Controller\Api\CustomizationController:
+            - App\Domain\SiteConfiguration\Repository\SiteConfigurationRepositoryInterface
+            - App\Domain\UserCustomization\Repository\UserCustomizationRepositoryInterface
+        App\Controller\Api\FavoriteController:
+            - App\Domain\Favorite\Exception\FavoriteAlreadyExistsException
+            - App\Domain\Favorite\Exception\FavoriteNotFoundException
+            - App\Domain\Favorite\Exception\UnauthorizedFavoriteAccessException
+        App\Controller\Api\NoteController:
+            - App\Domain\Note\Exception\NoteNotFoundException
+            - App\Domain\Note\Exception\UnauthorizedNoteAccessException
+        App\Controller\Api\PagesApiController:
+            - App\Domain\Menu\Repository\MenuRepositoryInterface
+            - App\Domain\Page\Repository\PageRepositoryInterface
+        App\Controller\Api\QCMApiController:
+            - App\Domain\QCM\Repository\QCMRepositoryInterface
+        App\Controller\Api\UserPageVisitController:
+            - App\Domain\UserPageVisit\Repository\UserPageVisitRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiAgentCourseController:
+            - App\Domain\AgentCourseRevision\Repository\AgentCourseRevisionRepositoryInterface
+            - App\Domain\PageContent\Repository\PageContentRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiCategoryController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiCourseLevelController:
+            - App\Domain\CourseLevel\Repository\CourseLevelRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiExoContentController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+            - App\Domain\ExoContent\Repository\ExoContentRepositoryInterface
+            - App\Domain\ExoMenu\Repository\ExoMenuRepositoryInterface
+            - App\Domain\Exo\Repository\ExoRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiMenuController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+            - App\Domain\CourseLevel\Repository\CourseLevelRepositoryInterface
+            - App\Domain\Menu\Repository\MenuRepositoryInterface
+            - App\Domain\PositionMenu\Repository\PositionMenuRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiPageContentController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+            - App\Domain\Menu\Repository\MenuRepositoryInterface
+            - App\Domain\PageContent\Repository\PageContentRepositoryInterface
+            - App\Domain\Page\Repository\PageRepositoryInterface
+        App\Controller\Api\AdminCrud\ApiPageController:
+            - App\Domain\Menu\Repository\MenuRepositoryInterface
+            - App\Domain\Page\Repository\PageRepositoryInterface
+        App\Controller\Admin\DashboardController:
+            - App\Domain\Category\Repository\CategoryRepositoryInterface
+            - App\Domain\ExoContent\Repository\ExoContentRepositoryInterface
+            - App\Domain\PageContent\Repository\PageContentRepositoryInterface
+            - App\Domain\QCM\Repository\QCMRepositoryInterface
+            - App\Domain\SiteConfiguration\Repository\SiteConfigurationRepositoryInterface
+            - App\Domain\UserPageVisit\Repository\UserPageVisitRepositoryInterface
+            - App\Domain\User\Repository\UserRepositoryInterface
+        App\Controller\Admin\PageVisitStatsController:
+            - App\Domain\UserPageVisit\Repository\UserPageVisitRepositoryInterface

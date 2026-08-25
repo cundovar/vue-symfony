@@ -1,5 +1,22 @@
 # Audit final hexagonal
 
+> **Portée de cet audit — à lire avant les conclusions.**
+>
+> Ce document vérifie le découplage Doctrine, et uniquement lui. Sur ce
+> périmètre ses conclusions restent exactes et vérifiées.
+>
+> Il ne teste pas le critère « les contrôleurs ne doivent plus porter la
+> logique métier », pourtant exigé par
+> [`roadmap-100-hexagonal.md`](roadmap-100-hexagonal.md). Sur ce critère,
+> la couche `Application` couvre 3 contextes sur 28 : 19 contrôleurs
+> injectent encore les ports du domaine directement.
+>
+> « Objectif atteint » ci-dessous s'entend donc pour la phase de découplage,
+> pas pour l'architecture hexagonale dans son ensemble. La dette restante est
+> mesurée dans `deptrac.yaml` (`skip_violations`) et planifiée par la roadmap.
+> La cible d'architecture est fixée par
+> [ADR 001](adr/001-architecture-hexagonale.md).
+
 ## Résultat
 
 L'application est alignée avec une architecture hexagonale "Doctrine en infrastructure":
@@ -43,7 +60,7 @@ Ce n'est pas nécessaire pour considérer cette base comme hexagonale au sens Sy
 
 ### 2. Listener Doctrine ciblé
 
-[`src/EventListener/PageContentSanitizerListener.php`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/src/EventListener/PageContentSanitizerListener.php) dépend encore de:
+[`src/EventListener/PageContentSanitizerListener.php`](../src/EventListener/PageContentSanitizerListener.php) dépend encore de:
 
 - `Doctrine\ORM\Events`
 - `PrePersistEventArgs`

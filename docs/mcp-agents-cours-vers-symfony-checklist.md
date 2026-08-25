@@ -2,7 +2,7 @@
 
 ## Objectif
 
-Faire passer [`MCP/agents-cours`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours) par l'API Symfony au lieu d'un accès direct MySQL, sans casser les use cases métier existants.
+Faire passer [`MCP/agents-cours`](../MCP/agents-cours) par l'API Symfony au lieu d'un accès direct MySQL, sans casser les use cases métier existants.
 
 ## Principe
 
@@ -10,11 +10,11 @@ On garde:
 
 - les use cases MCP
 - les entités MCP
-- le port [`ICoursRepository.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/domain/ports/ICoursRepository.js)
+- le port [`ICoursRepository.js`](../MCP/agents-cours/src/domain/ports/ICoursRepository.js)
 
 On remplace:
 
-- [`MySQLCoursRepository.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js)
+- [`MySQLCoursRepository.js`](../MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js)
 
 par:
 
@@ -28,17 +28,17 @@ par:
 
 ### À modifier
 
-- [`MCP/agents-cours/src/infrastructure/di/container.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/infrastructure/di/container.js)
-- [`MCP/agents-cours/config/config.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/config/config.js)
-- [`MCP/agents-cours/.env.example`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/.env.example)
-- [`MCP/agents-cours/README.md`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/README.md)
-- [`MCP/agents-cours/docs/QUICKSTART.md`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/docs/QUICKSTART.md)
-- [`MCP/agents-cours/docs/API-VUEJS.md`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/docs/API-VUEJS.md)
+- [`MCP/agents-cours/src/infrastructure/di/container.js`](../MCP/agents-cours/src/infrastructure/di/container.js)
+- [`MCP/agents-cours/config/config.js`](../MCP/agents-cours/config/config.js)
+- [`MCP/agents-cours/.env.example`](../MCP/agents-cours/.env.example)
+- [`MCP/agents-cours/README.md`](../MCP/agents-cours/README.md)
+- [`MCP/agents-cours/docs/QUICKSTART.md`](../MCP/agents-cours/docs/QUICKSTART.md)
+- [`MCP/agents-cours/docs/API-VUEJS.md`](../MCP/agents-cours/docs/API-VUEJS.md)
 
 ### À débrancher ensuite
 
-- [`MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js)
-- [`MCP/agents-cours/src/infrastructure/database/connection.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/infrastructure/database/connection.js)
+- [`MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js`](../MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js)
+- [`MCP/agents-cours/src/infrastructure/database/connection.js`](../MCP/agents-cours/src/infrastructure/database/connection.js)
 - `MCP/agents-cours/scripts/migrate.js`
 - `MCP/agents-cours/scripts/test-config.js`
 
@@ -46,11 +46,11 @@ par:
 
 Ne pas refondre ces fichiers tant que le port reste stable:
 
-- [`MCP/agents-cours/src/domain/ports/ICoursRepository.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/domain/ports/ICoursRepository.js)
-- [`MCP/agents-cours/src/domain/use-cases/CreerCours.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/domain/use-cases/CreerCours.js)
-- [`MCP/agents-cours/src/domain/use-cases/ListerCours.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/domain/use-cases/ListerCours.js)
-- [`MCP/agents-cours/src/domain/use-cases/ReviserCours.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/domain/use-cases/ReviserCours.js)
-- [`MCP/agents-cours/src/domain/use-cases/GererMenus.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/domain/use-cases/GererMenus.js)
+- [`MCP/agents-cours/src/domain/ports/ICoursRepository.js`](../MCP/agents-cours/src/domain/ports/ICoursRepository.js)
+- [`MCP/agents-cours/src/domain/use-cases/CreerCours.js`](../MCP/agents-cours/src/domain/use-cases/CreerCours.js)
+- [`MCP/agents-cours/src/domain/use-cases/ListerCours.js`](../MCP/agents-cours/src/domain/use-cases/ListerCours.js)
+- [`MCP/agents-cours/src/domain/use-cases/ReviserCours.js`](../MCP/agents-cours/src/domain/use-cases/ReviserCours.js)
+- [`MCP/agents-cours/src/domain/use-cases/GererMenus.js`](../MCP/agents-cours/src/domain/use-cases/GererMenus.js)
 
 ## Méthodes à implémenter dans SymfonyApiCoursRepository
 
@@ -132,7 +132,7 @@ Le nouveau repository HTTP doit couvrir tout le port actuel:
 
 ## Point critique
 
-Le vrai point non trivial est [`MySQLCoursRepository.sauvegarder()`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js).
+Le vrai point non trivial est [`MySQLCoursRepository.sauvegarder()`](../MCP/agents-cours/src/infrastructure/database/MySQLCoursRepository.js).
 
 Aujourd'hui cette méthode orchestre:
 
@@ -147,7 +147,7 @@ Il ne faut pas remplacer ça par une série d'appels HTTP dispersés dans le MCP
 
 ## Configuration MCP cible
 
-Dans [`MCP/agents-cours/config/config.js`](/home/cundo/Bureau/perso/symfoy_projets/symfo_vue/devdoc-local/MCP/agents-cours/config/config.js), prévoir:
+Dans [`MCP/agents-cours/config/config.js`](../MCP/agents-cours/config/config.js), prévoir:
 
 - `repositoryDriver`
 - `symfonyApi.baseUrl`

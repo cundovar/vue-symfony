@@ -131,6 +131,8 @@ jobs:
         id: phpstan
         continue-on-error: true
         run: composer analyse
+      - name: Check architecture rules (blocking)
+        run: composer deptrac
 
   frontend_quality:
     name: Frontend quality
