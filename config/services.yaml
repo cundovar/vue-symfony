@@ -26,11 +26,6 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist }
 
-    # Service de chiffrement des notes (legacy - à supprimer après migration complète)
-    App\Service\NoteEncryptionService:
-        arguments:
-            $appSecret: '%kernel.secret%'
-
     # ===== ARCHITECTURE HEXAGONALE =====
 
     # Infrastructure Services (doit être défini AVANT les bindings)
