@@ -53,3 +53,9 @@ front/public/build/.vite/
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+
+# Assets buildés : reconstruits par la CI (ci.yml), deploy.php et deploy.sh.
+# La CI les supprime de l'archive git avant deploiement pour y mettre les siens.
+/public/build/
+/public/spa/
+front/public/spa/
