@@ -81,6 +81,8 @@ php -S 127.0.0.1:8000 -t public             # le serveur intégré a besoin d'un
 
 Pour un parcours public, compléter par un essai dans le navigateur sur ordinateur et mobile, et en mode hors ligne. Ne pas présenter les tests de DevDoc comme une validation de cette application.
 
+Le hors ligne ne s'essaie que sur un build de production (`./build-assets.sh`, ou `docker compose run --rm front-build`) : avec le serveur Vite, aucun service worker n'est actif. Le service worker précharge la page `/spa/` et tous les scripts du build (`front/pwa/precache.js`) ; le texte de tous les cours est enregistré dans IndexedDB à chaque lancement (`fetchMenus`), et les images des captures par le bouton « Tout télécharger » de Mon espace. Pour couper vraiment le réseau, arrêter le serveur (conteneur nginx ou `php -S`) : l'option « Offline » de DevTools ne s'applique pas aux requêtes du service worker, et le navigateur intégré de l'app Claude n'enregistre pas de service worker. Après l'essai avec Docker, relancer nginx et le serveur Vite (`docker compose restart front`) pour revenir au mode développement.
+
 Dans un environnement où le proxy refuse les archives GitHub, `composer install --prefer-source` fonctionne, sauf PHPStan, qui n'est distribué qu'en archive ; le cloner alors en profondeur 1 depuis `github.com/phpstan/phpstan` au tag du `composer.lock` (le clone complet est trop lourd pour certains proxys).
 
 

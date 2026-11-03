@@ -13,7 +13,7 @@ Workflow unique : [`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) (
 | `build` | Archive de production : `composer install --no-dev`, build Vue, documentation copiée dans `public/docs/` | Push sur `main2` |
 | `deploy` | Envoi sur OVH dans `/home/egflbug/inclusion-numerique`, reconstruction du cache, sans migration | Après `build` |
 
-Dernier déploiement vérifié : run [41440222629](https://github.com/cundovar/vue-symfony/actions/runs/41440222629) (`main2`, `a379bfe1`, 2026-11-02) : les 6 jobs ont réussi, dont `docs`, `build` et `deploy`. <Status is="ci" />
+Dernier déploiement vérifié : run [41442887513](https://github.com/cundovar/vue-symfony/actions/runs/41442887513) (`main2`, `30da5e5`, 2026-11-02) : les 6 jobs ont réussi, dont `docs`, `build` et `deploy` ([relevé](../../VAE/evidence/2026-11-02-cadrage/ci-main2.txt)). Le run précédent, [41440222629](https://github.com/cundovar/vue-symfony/actions/runs/41440222629) (`a379bfe1`), avait aussi réussi. <Status is="ci" />
 
 ## Production OVH
 
@@ -26,6 +26,8 @@ Après le run 41440222629, le 2026-11-02, `https://inclusion-numerique.varascund
 - `/spa/`, `/api/categories`, `/api/page_contents`, `/docs/` et `/login` : 200 ; `/admin` : 302 ;
 - titre de page « Inclusion numérique - Formations libres et gratuites » ;
 - `/mcp`, `/.well-known/oauth-authorization-server` et `/oauth/authorize` : 404.
+
+Après le run 41442887513, contrôle en lecture seule du 2026-11-02 à 13 h 40 ([relevé](../../VAE/evidence/2026-11-02-cadrage/prod-http.txt)) : `/spa/`, `/docs/` et `/api` en 200 ; `/mcp`, `/oauth/authorize`, `/.well-known/oauth-authorization-server` et `/VAE/README.md` en 404 ; `/.env` en 403. Le site n'expose pas de numéro de version : ce contrôle date l'état du site, il n'identifie pas le commit servi.
 
 <Status is="prod" />
 
